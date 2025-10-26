@@ -4,11 +4,11 @@ import random
 
 def show_panel(parent_frame, game_data):
     """显示英雄联盟游戏面板"""
-    # 游戏描述，增大字体和边距
+    # 游戏描述，调整字体大小
     ttk.Label(
         parent_frame,
         text="多人在线战术竞技游戏，拥有丰富的英雄角色和多样化的游戏模式。",
-        font=("SimHei", 12),
+        font=("SimHei", 10),
         wraplength=600,
         justify=tk.LEFT
     ).pack(anchor=tk.W, padx=20, pady=(0, 20))
@@ -37,8 +37,8 @@ def create_info_cards(parent_frame):
         # 增大卡片尺寸和内边距
         card = ttk.Frame(cards_frame, padding=15, relief=tk.RAISED)
         card.grid(row=0, column=i, padx=10, pady=10, sticky="nsew")
-        ttk.Label(card, text=label, font=("SimHei", 11)).pack(anchor=tk.CENTER)
-        ttk.Label(card, text=value, font=("SimHei", 14, "bold")).pack(anchor=tk.CENTER)
+        ttk.Label(card, text=label, font=("SimHei", 10)).pack(anchor=tk.CENTER)
+        ttk.Label(card, text=value, font=("SimHei", 12, "bold")).pack(anchor=tk.CENTER)
     
     # 设置网格权重，让卡片均匀分布并占据更多空间
     for i in range(len(stats)):
@@ -69,12 +69,12 @@ def create_feature_section(parent_frame, game_data):
     for i, (text, command) in enumerate(feature_buttons):
         row = i // 2
         col = i % 2
-        # 使用更大的按钮尺寸
+        # 使用合适的按钮尺寸
         button = ttk.Button(
             button_frame,
             text=text,
-            width=20,
-            padding=10,
+            width=18,
+            padding=8,
             command=command
         )
         button.grid(row=row, column=col, padx=10, pady=10, sticky="nsew")
@@ -85,13 +85,13 @@ def create_feature_section(parent_frame, game_data):
     for i in range((len(feature_buttons) + 1) // 2):
         button_frame.rowconfigure(i, weight=1, minsize=80)
     
-    # 创建内容区域，增大字体和边距
+    # 创建内容区域，调整字体大小
     global content_area
     content_area = ttk.Label(
         features_frame,
         text=f"选择上方功能按钮以操作 {game_data['name']}",
-        font=("SimHei", 12),
-        padding=20,
+        font=("SimHei", 10),
+        padding=15,
         justify=tk.CENTER
     )
     content_area.pack(fill=tk.BOTH, expand=True, pady=20)

@@ -46,9 +46,9 @@ class GameAssistantApp:
     def setup_fonts(self):
         # 设置中文字体，确保中文正常显示
         default_font = font.nametofont("TkDefaultFont")
-        default_font.configure(family="SimHei", size=10)
+        default_font.configure(family="SimHei", size=8)
         text_font = font.nametofont("TkTextFont")
-        text_font.configure(family="SimHei", size=10)
+        text_font.configure(family="SimHei", size=8)
     
     def create_gradient_background(self):
         # 创建画布作为背景
@@ -109,9 +109,9 @@ class GameAssistantApp:
         self.separator.pack(side=tk.LEFT, fill=tk.Y, padx=(5, 5))
     
     def create_game_tabs(self):
-        # 创建标签标题，使用更大的字体
-        title_label = ttk.Label(self.left_frame, text="游戏列表", font=("SimHei", 14, "bold"))
-        title_label.pack(pady=(0, 15))
+        # 创建标签标题，调整字体大小
+        title_label = ttk.Label(self.left_frame, text="游戏列表", font=("SimHei", 12, "bold"))
+        title_label.pack(pady=(0, 10))
         
         # 创建游戏标签按钮
         self.game_buttons = []
@@ -123,21 +123,21 @@ class GameAssistantApp:
             
             # 在Windows上，ttk按钮的样式限制较多，这里使用一种简化方法
             if sys.platform.startswith("win"):
-                # 在Windows上使用默认样式，但增加字体大小和内边距
+                # 在Windows上使用默认样式，调整字体大小和内边距
                 self.style.configure(
                     button_style,
-                    font=("SimHei", 12, "bold"),
-                    padding=15
+                    font=("SimHei", 10, "bold"),
+                    padding=10
                 )
                 
                 # 创建按钮
                 button = tk.Button(
                     self.left_frame,
                     text=f"{game['icon']} {game['name']}",
-                    font=("SimHei", 12, "bold"),
+                    font=("SimHei", 10, "bold"),
                     bg=game['color'],
                     fg="white",
-                    height=2,
+                    height=1,
                     relief=tk.RAISED,
                     command=lambda g=game: self.show_game_panel(g)
                 )
@@ -145,8 +145,8 @@ class GameAssistantApp:
                 # 在其他平台上使用ttk样式
                 self.style.configure(
                     button_style,
-                    font=("SimHei", 12, "bold"),
-                    padding=15,
+                    font=("SimHei", 10, "bold"),
+                    padding=10,
                     background=game['color'],
                     foreground="white"
                 )
@@ -195,7 +195,7 @@ class GameAssistantApp:
         title_label = tk.Label(
             title_frame,
             text=f"{game['icon']} {game['name']}",
-            font=("SimHei", 18, "bold"),
+            font=("SimHei", 14, "bold"),
             fg=game.get('color', '#000000')
         )
         title_label.pack(anchor=tk.W, padx=20, pady=15)
