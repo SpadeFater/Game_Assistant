@@ -27,11 +27,9 @@ class GameAssistantApp:
         # 初始化游戏数据，添加颜色属性
         self.games = [
             {"name": "英雄联盟", "icon": "🎮", "color": "#4B7BEC"},
-            {"name": "绝地求生", "icon": "🔫", "color": "#FF6B6B"},
-            {"name": "原神", "icon": "⚔️", "color": "#4ECDC4"},
-            {"name": "王者荣耀", "icon": "🏆", "color": "#FFD166"},
-            {"name": "CS2", "icon": "💥", "color": "#06D6A0"},
-            {"name": "DOTA2", "icon": "🎯", "color": "#118AB2"}
+            {"name": "三角洲行动", "icon": "🚁", "color": "#FF7043"},
+            {"name": "饥荒", "icon": "🌾", "color": "#8D6E63"},
+            {"name": "我的世界", "icon": "🧱", "color": "#689F38"}
         ]
         
         # 创建左侧标签栏
