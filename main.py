@@ -3,28 +3,35 @@ from tkinter import ttk, font
 import importlib.util
 import os
 import sys
+from tkinter import Canvas
 
 class GameAssistantApp:
     def __init__(self, root):
         self.root = root
         self.root.title("游戏助手")
-        self.root.geometry("800x600")
-        self.root.minsize(600, 400)
+        self.root.geometry("900x700")
+        self.root.minsize(700, 500)
         
         # 设置中文字体
         self.setup_fonts()
         
+        # 创建样式
+        self.style = ttk.Style()
+        
+        # 添加渐变背景
+        self.create_gradient_background()
+        
         # 创建主布局
         self.create_main_layout()
         
-        # 初始化游戏数据
+        # 初始化游戏数据，添加颜色属性
         self.games = [
-            {"name": "英雄联盟", "icon": "🎮"},
-            {"name": "绝地求生", "icon": "🔫"},
-            {"name": "原神", "icon": "⚔️"},
-            {"name": "王者荣耀", "icon": "🏆"},
-            {"name": "CS2", "icon": "💥"},
-            {"name": "DOTA2", "icon": "🎯"}
+            {"name": "英雄联盟", "icon": "🎮", "color": "#4B7BEC"},
+            {"name": "绝地求生", "icon": "🔫", "color": "#FF6B6B"},
+            {"name": "原神", "icon": "⚔️", "color": "#4ECDC4"},
+            {"name": "王者荣耀", "icon": "🏆", "color": "#FFD166"},
+            {"name": "CS2", "icon": "💥", "color": "#06D6A0"},
+            {"name": "DOTA2", "icon": "🎯", "color": "#118AB2"}
         ]
         
         # 创建左侧标签栏
@@ -45,13 +52,54 @@ class GameAssistantApp:
         text_font = font.nametofont("TkTextFont")
         text_font.configure(family="SimHei", size=10)
     
+    def create_gradient_background(self):
+        # 创建画布作为背景
+        self.canvas = Canvas(self.root)
+        self.canvas.pack(fill=tk.BOTH, expand=True)
+        
+        # 绑定尺寸变化事件，更新渐变背景
+        self.root.bind("<Configure>", self.update_gradient)
+        
+        # 初始绘制渐变
+        self.update_gradient(None)
+    
+    def update_gradient(self, event):
+        # 创建从浅蓝色到深蓝色的渐变背景
+        width = self.root.winfo_width()
+        height = self.root.winfo_height()
+        
+        # 确保窗口尺寸有效
+        if width <= 1 or height <= 1:
+            return
+        
+        # 清空画布
+        self.canvas.delete("gradient")
+        
+        # 绘制渐变
+        r1, g1, b1 = 220, 230, 255  # 浅蓝色
+        r2, g2, b2 = 100, 149, 237  # 深蓝色
+        
+        # 优化：每10像素绘制一条，提高性能
+        for y in range(0, height, 10):
+            # 线性插值计算RGB值
+            r = int(r1 + (r2 - r1) * y / height)
+            g = int(g1 + (g2 - g1) * y / height)
+            b = int(b1 + (b2 - b1) * y / height)
+            color = f"#{r:02x}{g:02x}{b:02x}"
+            
+            # 绘制水平条
+            self.canvas.create_line(0, y, width, y, fill=color, tags="gradient")
+        
+        # 确保画布在底层
+        self.canvas.lower("gradient")
+    
     def create_main_layout(self):
         # 创建主框架
         self.main_frame = ttk.Frame(self.root)
         self.main_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
         
-        # 左侧标签栏框架
-        self.left_frame = ttk.Frame(self.main_frame, width=200)
+        # 左侧标签栏框架，增大宽度
+        self.left_frame = ttk.Frame(self.main_frame, width=250)
         self.left_frame.pack(side=tk.LEFT, fill=tk.Y, padx=(0, 10))
         
         # 右侧内容面板框架
@@ -63,24 +111,58 @@ class GameAssistantApp:
         self.separator.pack(side=tk.LEFT, fill=tk.Y, padx=(5, 5))
     
     def create_game_tabs(self):
-        # 创建标签标题
-        ttk.Label(self.left_frame, text="游戏列表", font=("SimHei", 12, "bold")).pack(pady=(0, 10))
+        # 创建标签标题，使用更大的字体
+        title_label = ttk.Label(self.left_frame, text="游戏列表", font=("SimHei", 14, "bold"))
+        title_label.pack(pady=(0, 15))
         
         # 创建游戏标签按钮
         self.game_buttons = []
-        for game in self.games:
-            button = ttk.Button(
-                self.left_frame,
-                text=f"{game['icon']} {game['name']}",
-                style="Game.TButton",
-                command=lambda g=game: self.show_game_panel(g)
-            )
-            button.pack(fill=tk.X, pady=2, padx=5)
-            self.game_buttons.append(button)
         
-        # 配置按钮样式
-        self.style = ttk.Style()
-        self.style.configure("Game.TButton", font=("SimHei", 10))
+        # 为每个游戏创建独特的按钮样式
+        for i, game in enumerate(self.games):
+            # 创建自定义按钮样式
+            button_style = f"Game.TButton{i}"
+            
+            # 在Windows上，ttk按钮的样式限制较多，这里使用一种简化方法
+            if sys.platform.startswith("win"):
+                # 在Windows上使用默认样式，但增加字体大小和内边距
+                self.style.configure(
+                    button_style,
+                    font=("SimHei", 12, "bold"),
+                    padding=15
+                )
+                
+                # 创建按钮
+                button = tk.Button(
+                    self.left_frame,
+                    text=f"{game['icon']} {game['name']}",
+                    font=("SimHei", 12, "bold"),
+                    bg=game['color'],
+                    fg="white",
+                    height=2,
+                    relief=tk.RAISED,
+                    command=lambda g=game: self.show_game_panel(g)
+                )
+            else:
+                # 在其他平台上使用ttk样式
+                self.style.configure(
+                    button_style,
+                    font=("SimHei", 12, "bold"),
+                    padding=15,
+                    background=game['color'],
+                    foreground="white"
+                )
+                
+                # 创建按钮
+                button = ttk.Button(
+                    self.left_frame,
+                    text=f"{game['icon']} {game['name']}",
+                    style=button_style,
+                    command=lambda g=game: self.show_game_panel(g)
+                )
+            
+            button.pack(fill=tk.X, pady=5, padx=8)
+            self.game_buttons.append(button)
         
         # 添加滚动条（如果游戏列表很长）
         self.left_scrollbar = ttk.Scrollbar(self.left_frame)
@@ -107,15 +189,18 @@ class GameAssistantApp:
         for widget in self.right_frame.winfo_children():
             widget.destroy()
         
-        # 显示游戏标题
+        # 显示游戏标题，使用更大的字体和游戏特定颜色
         title_frame = ttk.Frame(self.right_frame)
         title_frame.pack(fill=tk.X, pady=(0, 20))
         
-        ttk.Label(
+        # 创建带有游戏颜色的标题标签
+        title_label = tk.Label(
             title_frame,
             text=f"{game['icon']} {game['name']}",
-            font=("SimHei", 16, "bold")
-        ).pack(anchor=tk.W, padx=10, pady=10)
+            font=("SimHei", 18, "bold"),
+            fg=game.get('color', '#000000')
+        )
+        title_label.pack(anchor=tk.W, padx=20, pady=15)
         
         # 检查是否有对应的游戏模块
         game_name = game["name"]
@@ -146,5 +231,6 @@ class GameAssistantApp:
 
 if __name__ == "__main__":
     root = tk.Tk()
+    # 运行应用
     app = GameAssistantApp(root)
     root.mainloop()

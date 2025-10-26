@@ -25,17 +25,18 @@ def create_info_cards(parent_frame):
     
     # 原神特有信息
     stats = {
-        "活跃玩家": f"{random.randint(6000000, 9000000)}",
-        "服务器状态": "正常" if random.random() > 0.1 else "维护中",
-        "最新版本": f"{random.randint(4, 5)}.{random.randint(0, 8)}",
-        "当前活动": "限时祈愿" if random.random() > 0.3 else "版本活动"
+        "当前版本": "4.6",
+        "活跃角色": "70+",
+        "开放区域": "7个",
+        "服务器状态": "正常"
     }
     
     for i, (label, value) in enumerate(stats.items()):
-        card = ttk.Frame(cards_frame, padding=10, relief=tk.RAISED)
-        card.grid(row=0, column=i, padx=5, pady=5, sticky="nsew")
-        ttk.Label(card, text=label, font=("SimHei", 9)).pack(anchor=tk.CENTER)
-        ttk.Label(card, text=value, font=("SimHei", 12, "bold")).pack(anchor=tk.CENTER)
+        # 增大卡片尺寸和内边距
+        card = ttk.Frame(cards_frame, padding=15, relief=tk.RAISED)
+        card.grid(row=0, column=i, padx=10, pady=10, sticky="nsew")
+        ttk.Label(card, text=label, font=("SimHei", 11)).pack(anchor=tk.CENTER)
+        ttk.Label(card, text=value, font=("SimHei", 14, "bold")).pack(anchor=tk.CENTER)
     
     # 设置网格权重，让卡片均匀分布
     for i in range(len(stats)):
@@ -57,19 +58,29 @@ def create_feature_section(parent_frame, game_data):
         ("💬 社区", lambda: show_community(game_data))
     ]
     
+    # 创建按钮容器，使用网格布局，增大边距
     button_frame = ttk.Frame(features_frame)
-    button_frame.pack(fill=tk.X, pady=10)
+    button_frame.pack(fill=tk.BOTH, expand=True, padx=15, pady=15)
     
+    # 使用网格布局排列按钮，增大按钮尺寸和间距，改为2列布局
     for i, (text, command) in enumerate(feature_buttons):
-        row = i // 3
-        col = i % 3
+        row = i // 2
+        col = i % 2
+        # 使用更大的按钮尺寸
         button = ttk.Button(
             button_frame,
             text=text,
-            width=15,
+            width=20,
+            padding=10,
             command=command
         )
-        button.grid(row=row, column=col, padx=5, pady=5)
+        button.grid(row=row, column=col, padx=10, pady=10, sticky="nsew")
+    
+    # 使按钮能够均匀拉伸并占据更多空间
+    for i in range(2):  # 改为2列布局，让按钮更宽
+        button_frame.columnconfigure(i, weight=1, minsize=250)
+    for i in range((len(feature_buttons) + 1) // 2):
+        button_frame.rowconfigure(i, weight=1, minsize=80)
     
     # 创建内容区域
     global content_area
