@@ -18,9 +18,6 @@ class GameAssistantApp:
         # 创建样式
         self.style = ttk.Style()
         
-        # 添加渐变背景
-        self.create_gradient_background()
-        
         # 创建主布局
         self.create_main_layout()
         
@@ -50,46 +47,7 @@ class GameAssistantApp:
         text_font = font.nametofont("TkTextFont")
         text_font.configure(family="SimHei", size=8)
     
-    def create_gradient_background(self):
-        # 创建画布作为背景
-        self.canvas = Canvas(self.root)
-        self.canvas.pack(fill=tk.BOTH, expand=True)
-        
-        # 绑定尺寸变化事件，更新渐变背景
-        self.root.bind("<Configure>", self.update_gradient)
-        
-        # 初始绘制渐变
-        self.update_gradient(None)
-    
-    def update_gradient(self, event):
-        # 创建从浅蓝色到深蓝色的渐变背景
-        width = self.root.winfo_width()
-        height = self.root.winfo_height()
-        
-        # 确保窗口尺寸有效
-        if width <= 1 or height <= 1:
-            return
-        
-        # 清空画布
-        self.canvas.delete("gradient")
-        
-        # 绘制渐变
-        r1, g1, b1 = 220, 230, 255  # 浅蓝色
-        r2, g2, b2 = 100, 149, 237  # 深蓝色
-        
-        # 优化：每10像素绘制一条，提高性能
-        for y in range(0, height, 10):
-            # 线性插值计算RGB值
-            r = int(r1 + (r2 - r1) * y / height)
-            g = int(g1 + (g2 - g1) * y / height)
-            b = int(b1 + (b2 - b1) * y / height)
-            color = f"#{r:02x}{g:02x}{b:02x}"
-            
-            # 绘制水平条
-            self.canvas.create_line(0, y, width, y, fill=color, tags="gradient")
-        
-        # 确保画布在底层
-        self.canvas.lower("gradient")
+    # 移除了渐变背景相关方法
     
     def create_main_layout(self):
         # 创建主框架
@@ -126,7 +84,7 @@ class GameAssistantApp:
                 # 在Windows上使用默认样式，调整字体大小和内边距
                 self.style.configure(
                     button_style,
-                    font=("SimHei", 10, "bold"),
+                    font=("SimHei", 15, "bold"),
                     padding=10
                 )
                 
@@ -134,7 +92,7 @@ class GameAssistantApp:
                 button = tk.Button(
                     self.left_frame,
                     text=f"{game['icon']} {game['name']}",
-                    font=("SimHei", 10, "bold"),
+                    font=("SimHei", 15, "bold"),
                     bg=game['color'],
                     fg="white",
                     height=1,
@@ -145,7 +103,7 @@ class GameAssistantApp:
                 # 在其他平台上使用ttk样式
                 self.style.configure(
                     button_style,
-                    font=("SimHei", 10, "bold"),
+                    font=("SimHei", 15, "bold"),
                     padding=10,
                     background=game['color'],
                     foreground="white"

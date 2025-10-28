@@ -1,5 +1,13 @@
 import tkinter as tk
 from tkinter import ttk
+import sys
+import os
+
+# 添加当前目录到Python路径
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+# 导入功能实现模块
+from 饥荒功能实现 import show_character_gallery, show_food_guide, show_item_guide, show_mod_recommendations
 
 # 显示饥荒游戏面板
 def show_panel(parent, game_data):
@@ -21,35 +29,37 @@ def show_panel(parent, game_data):
     )
     desc_label.pack(anchor=tk.W, pady=(0, 20))
     
-    # 创建信息卡片区域
-    info_frame = ttk.Frame(content_frame)
-    info_frame.pack(fill=tk.X, pady=(0, 20))
-    
-    # 设置网格权重，使卡片均匀分布
-    info_frame.columnconfigure(0, weight=1)
-    info_frame.columnconfigure(1, weight=1)
-    
-    # 信息卡片1：当前版本
-    create_info_card(info_frame, "当前版本", "2023.12.01", 0, 0)
-    
-    # 信息卡片2：可用角色
-    create_info_card(info_frame, "可用角色", "25+", 0, 1)
-    
     # 创建功能按钮区域
-    feature_frame = ttk.Frame(content_frame)
-    feature_frame.pack(fill=tk.BOTH, expand=True)
+    buttons_frame = ttk.Frame(content_frame)
+    buttons_frame.pack(fill=tk.X, pady=(0, 20))
     
-    # 设置网格权重，使按钮均匀分布
-    feature_frame.columnconfigure(0, weight=1)
-    feature_frame.columnconfigure(1, weight=1)
-    feature_frame.rowconfigure(0, weight=1)
-    feature_frame.rowconfigure(1, weight=1)
+    # 创建四个功能按钮
+    btn_width = 15
+    character_btn = ttk.Button(buttons_frame, text="人物图鉴", width=btn_width,
+                             command=lambda: show_character_gallery(content_frame))
+    character_btn.pack(side=tk.LEFT, padx=10)
     
-    # 创建功能按钮
-    create_feature_button(feature_frame, "生存指南", "学习基础生存技巧和策略", 0, 0)
-    create_feature_button(feature_frame, "角色图鉴", "了解所有角色的特性和能力", 0, 1)
-    create_feature_button(feature_frame, "资源百科", "查询各类资源的获取和用途", 1, 0)
-    create_feature_button(feature_frame, "MOD推荐", "探索热门MOD和使用方法", 1, 1)
+    food_btn = ttk.Button(buttons_frame, text="食物介绍", width=btn_width,
+                        command=lambda: show_food_guide(content_frame))
+    food_btn.pack(side=tk.LEFT, padx=10)
+    
+    item_btn = ttk.Button(buttons_frame, text="物品介绍", width=btn_width,
+                        command=lambda: show_item_guide(content_frame))
+    item_btn.pack(side=tk.LEFT, padx=10)
+    
+    mod_btn = ttk.Button(buttons_frame, text="MOD推荐", width=btn_width,
+                       command=lambda: show_mod_recommendations(content_frame))
+    mod_btn.pack(side=tk.LEFT, padx=10)
+    
+    # 创建显示区域（用于显示各个功能的内容）
+    global display_frame
+    display_frame = ttk.Frame(content_frame)
+    display_frame.pack(fill=tk.BOTH, expand=True, pady=10)
+    
+    # 初始显示欢迎信息
+    welcome_label = tk.Label(display_frame, text="请选择上方的功能按钮开始探索", 
+                          font=('SimHei', 12), fg="blue")
+    welcome_label.pack(pady=50)
 
 # 创建信息卡片
 def create_info_card(parent, title, value, row, column):
