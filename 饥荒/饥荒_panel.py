@@ -18,10 +18,27 @@ def show_panel(parent, game_data):
     content_frame = ttk.Frame(parent)
     content_frame.pack(fill=tk.BOTH, expand=True, padx=20, pady=10)
     
+    # 创建显示区域（用于显示各个功能的内容）
+    global display_frame
+    display_frame = ttk.Frame(content_frame)
+    display_frame.pack(fill=tk.BOTH, expand=True)
+    
+    # 在display_frame中显示初始内容（游戏描述和功能按钮）
+    show_initial_content()
+
+# 显示初始内容（游戏描述和功能按钮）
+def show_initial_content():
+    # 清空display_frame
+    for widget in display_frame.winfo_children():
+        widget.destroy()
+    
+    # 设置中文字体
+    default_font = ('SimHei', 10)
+    
     # 游戏描述
     desc_text = "饥荒是一款生存类游戏，玩家需要在充满危险的世界中收集资源、建造基地、制作工具，努力存活下去。游戏拥有丰富的角色系统和多样化的生存挑战。"
     desc_label = tk.Label(
-        content_frame,
+        display_frame,
         text=desc_text,
         font=default_font,
         wraplength=600,
@@ -30,31 +47,36 @@ def show_panel(parent, game_data):
     desc_label.pack(anchor=tk.W, pady=(0, 20))
     
     # 创建功能按钮区域
-    buttons_frame = ttk.Frame(content_frame)
-    buttons_frame.pack(fill=tk.X, pady=(0, 20))
+    buttons_frame = ttk.Frame(display_frame)
+    buttons_frame.pack(pady=(0, 20))
     
-    # 创建四个功能按钮
-    btn_width = 15
+    # 创建四个功能按钮（长宽比例2:1，变大为原来的两倍）
+    # 创建自定义按钮样式，设置字体大小
+    style = ttk.Style()
+    style.configure("LargeButton.TButton", font=('SimHei', 14, 'bold'))
+    
+    # 设置按钮宽度为原来的两倍，使用ttk的padding来控制高度，实现2:1的长宽比例
+    btn_width = 60
+    
     character_btn = ttk.Button(buttons_frame, text="人物图鉴", width=btn_width,
-                             command=lambda: show_character_gallery(content_frame))
-    character_btn.pack(side=tk.LEFT, padx=10)
+                             style="LargeButton.TButton", padding=(0, 15),
+                             command=lambda: show_character_gallery(display_frame))
+    character_btn.pack(fill=tk.X, pady=8, padx=10)
     
     food_btn = ttk.Button(buttons_frame, text="食物介绍", width=btn_width,
-                        command=lambda: show_food_guide(content_frame))
-    food_btn.pack(side=tk.LEFT, padx=10)
+                        style="LargeButton.TButton", padding=(0, 15),
+                        command=lambda: show_food_guide(display_frame))
+    food_btn.pack(fill=tk.X, pady=8, padx=10)
     
-    item_btn = ttk.Button(buttons_frame, text="物品介绍", width=btn_width,
-                        command=lambda: show_item_guide(content_frame))
-    item_btn.pack(side=tk.LEFT, padx=10)
+    item_btn = ttk.Button(buttons_frame, text="饥荒百科", width=btn_width,
+                        style="LargeButton.TButton", padding=(0, 15),
+                        command=lambda: show_item_guide(display_frame))
+    item_btn.pack(fill=tk.X, pady=8, padx=10)
     
     mod_btn = ttk.Button(buttons_frame, text="MOD推荐", width=btn_width,
-                       command=lambda: show_mod_recommendations(content_frame))
-    mod_btn.pack(side=tk.LEFT, padx=10)
-    
-    # 创建显示区域（用于显示各个功能的内容）
-    global display_frame
-    display_frame = ttk.Frame(content_frame)
-    display_frame.pack(fill=tk.BOTH, expand=True, pady=10)
+                       style="LargeButton.TButton", padding=(0, 15),
+                       command=lambda: show_mod_recommendations(display_frame))
+    mod_btn.pack(fill=tk.X, pady=8, padx=10)
     
     # 初始显示欢迎信息
     welcome_label = tk.Label(display_frame, text="请选择上方的功能按钮开始探索", 
